@@ -66,60 +66,136 @@ const TanishqPortfolio = () => {
     </div>
   );
 
-  // Animated Background Component
-  const AnimatedBackground = () => {
-    const shapes = Array.from({ length: 15 }, (_, i) => ({
+ // Enhanced Animated Blob Background Component
+  const AnimatedBlobBackground = () => {
+    const blobs = Array.from({ length: 12 }, (_, i) => ({
       id: i,
-      size: Math.random() * 100 + 50,
+      size: Math.random() * 300 + 150,
       x: Math.random() * 100,
       y: Math.random() * 100,
       rotation: Math.random() * 360,
-      duration: Math.random() * 20 + 10,
-      delay: Math.random() * 5,
-      shape: Math.random() > 0.5 ? 'circle' : 'polygon'
+      duration: Math.random() * 25 + 15,
+      delay: Math.random() * 8,
+      morphSpeed: Math.random() * 20 + 10,
+      opacity: Math.random() * 0.15 + 0.05,
+      hue: Math.random() * 360
     }));
 
     return (
-      <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
-        {shapes.map((shape) => (
+      <>
+        <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
+          {blobs.map((blob) => (
+            <div
+              key={blob.id}
+              className="absolute transition-all duration-1000 ease-out"
+              style={{
+                left: `${blob.x}%`,
+                top: `${blob.y}%`,
+                width: `${blob.size}px`,
+                height: `${blob.size}px`,
+                transform: `translate(-50%, -50%) rotate(${blob.rotation}deg)`,
+                animation: `
+                  morphBlob${blob.id} ${blob.morphSpeed}s ease-in-out infinite,
+                  floatBlob${blob.id} ${blob.duration}s ease-in-out infinite,
+                  colorShift${blob.id} ${blob.duration * 1.5}s ease-in-out infinite
+                `,
+                animationDelay: `${blob.delay}s`,
+                background: isDarkMode 
+                  ? `radial-gradient(circle, hsla(${blob.hue}, 70%, 60%, ${blob.opacity}) 0%, hsla(${blob.hue + 60}, 60%, 50%, ${blob.opacity * 0.5}) 70%, transparent 100%)`
+                  : `radial-gradient(circle, hsla(${blob.hue}, 60%, 50%, ${blob.opacity}) 0%, hsla(${blob.hue + 60}, 70%, 60%, ${blob.opacity * 0.7}) 70%, transparent 100%)`,
+                borderRadius: '60% 40% 30% 70% / 60% 30% 70% 40%',
+                filter: 'blur(1px)',
+              }}
+            />
+          ))}
+          
+          {/* Interactive mouse-following blob */}
           <div
-            key={shape.id}
-            className={`absolute opacity-20 ${
-              isDarkMode ? 'bg-white' : 'bg-gray-900'
-            }`}
+            className="absolute pointer-events-none z-10 transition-all duration-300 ease-out"
             style={{
-              left: `${shape.x}%`,
-              top: `${shape.y}%`,
-              width: `${shape.size}px`,
-              height: `${shape.size}px`,
-              transform: `rotate(${shape.rotation}deg)`,
-              animation: `float-${shape.id} ${shape.duration}s ease-in-out infinite`,
-              animationDelay: `${shape.delay}s`,
-              borderRadius: shape.shape === 'circle' ? '50%' : '0',
-              clipPath: shape.shape === 'polygon' 
-                ? 'polygon(50% 0%, 0% 100%, 100% 100%)'
-                : 'none'
+              left: `${mousePosition.x}px`,
+              top: `${mousePosition.y}px`,
+              width: '200px',
+              height: '200px',
+              transform: 'translate(-50%, -50%)',
+              background: isDarkMode 
+                ? 'radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, rgba(147, 51, 234, 0.05) 50%, transparent 70%)'
+                : 'radial-gradient(circle, rgba(59, 130, 246, 0.08) 0%, rgba(147, 51, 234, 0.04) 50%, transparent 70%)',
+              borderRadius: '60% 40% 30% 70% / 60% 30% 70% 40%',
+              animation: 'mouseBlob 3s ease-in-out infinite',
+              filter: 'blur(2px)',
             }}
           />
-        ))}
+        </div>
         
         <style jsx>{`
-          ${shapes.map(shape => `
-            @keyframes float-${shape.id} {
+          ${blobs.map(blob => `
+            @keyframes morphBlob${blob.id} {
               0%, 100% { 
-                transform: translateY(0px) rotate(${shape.rotation}deg) scale(1);
-                opacity: 0.1;
+                border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+                transform: translate(-50%, -50%) rotate(${blob.rotation}deg) scale(1);
+              }
+              25% { 
+                border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%;
+                transform: translate(-50%, -50%) rotate(${blob.rotation + 90}deg) scale(1.1);
               }
               50% { 
-                transform: translateY(-${shape.size/2}px) rotate(${shape.rotation + 180}deg) scale(1.2);
-                opacity: 0.3;
+                border-radius: 50% 30% 60% 40% / 40% 50% 60% 30%;
+                transform: translate(-50%, -50%) rotate(${blob.rotation + 180}deg) scale(0.95);
+              }
+              75% { 
+                border-radius: 70% 50% 40% 30% / 30% 40% 50% 70%;
+                transform: translate(-50%, -50%) rotate(${blob.rotation + 270}deg) scale(1.05);
+              }
+            }
+            
+            @keyframes floatBlob${blob.id} {
+              0%, 100% { 
+                transform: translate(-50%, -50%) translateY(0px) translateX(0px);
+              }
+              25% { 
+                transform: translate(-50%, -50%) translateY(-${blob.size/3}px) translateX(${blob.size/4}px);
+              }
+              50% { 
+                transform: translate(-50%, -50%) translateY(-${blob.size/2}px) translateX(-${blob.size/6}px);
+              }
+              75% { 
+                transform: translate(-50%, -50%) translateY(-${blob.size/4}px) translateX(-${blob.size/3}px);
+              }
+            }
+            
+            @keyframes colorShift${blob.id} {
+              0%, 100% { 
+                filter: blur(1px) hue-rotate(0deg);
+              }
+              33% { 
+                filter: blur(2px) hue-rotate(120deg);
+              }
+              66% { 
+                filter: blur(1.5px) hue-rotate(240deg);
               }
             }
           `).join('')}
+          
+          @keyframes mouseBlob {
+            0%, 100% { 
+              border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+              transform: translate(-50%, -50%) scale(1);
+            }
+            33% { 
+              border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%;
+              transform: translate(-50%, -50%) scale(1.2);
+            }
+            66% { 
+              border-radius: 50% 30% 60% 40% / 40% 50% 60% 30%;
+              transform: translate(-50%, -50%) scale(0.8);
+            }
+          }
         `}</style>
-      </div>
+      </>
     );
   };
+
 
   const NavigationDot = ({ section, label, isActive }) => (
     <button
