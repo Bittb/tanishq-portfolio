@@ -5,10 +5,11 @@ const TanishqPortfolio = () => {
   const [activeSection, setActiveSection] = useState('home');
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [scrollY, setScrollY] = useState(0);
   const containerRef = useRef(null);
 
   useEffect(() => {
-    const timer = setTimeout(() => setIsLoading(false), 2000);
+    const timer = setTimeout(() => setIsLoading(false), 1800);
     return () => clearTimeout(timer);
   }, []);
 
@@ -23,48 +24,124 @@ const TanishqPortfolio = () => {
       }
     };
 
+    const handleScroll = () => {
+      setScrollY(window.scrollY);
+    };
+
     const container = containerRef.current;
     if (container) {
       container.addEventListener('mousemove', handleMouseMove);
-      return () => container.removeEventListener('mousemove', handleMouseMove);
+      window.addEventListener('scroll', handleScroll);
+      return () => {
+        container.removeEventListener('mousemove', handleMouseMove);
+        window.removeEventListener('scroll', handleScroll);
+      };
     }
   }, []);
 
-  const toggleDarkMode = () => {
-    setIsDarkMode(!isDarkMode);
-  };
-
   const LoadingScreen = () => (
-    <div className="fixed inset-0 bg-gradient-to-br from-purple-100 to-blue-100 flex items-center justify-center z-50">
-      <div className="text-center">
-        <div className="text-gray-700 text-2xl mb-4 font-light tracking-wide">
-          Materializing forms...
+    <div className={`fixed inset-0 flex items-center justify-center z-50 transition-all duration-1000 ${
+      isDarkMode 
+        ? 'bg-gradient-to-br from-slate-900 via-gray-900 to-zinc-900' 
+        : 'bg-gradient-to-br from-slate-50 via-gray-50 to-zinc-50'
+    }`}>
+      <div className="text-center space-y-8">
+        <div className={`text-3xl font-extralight tracking-[0.3em] ${
+          isDarkMode ? 'text-gray-200' : 'text-gray-700'
+        }`}>
+          TANISHQ BHARDWAJ
         </div>
-        <div className="w-32 h-px bg-gray-700 mx-auto animate-pulse"></div>
+        <div className="flex items-center justify-center space-x-2">
+          <div className={`w-2 h-2 rounded-full animate-pulse ${
+            isDarkMode ? 'bg-blue-400' : 'bg-blue-600'
+          }`} style={{ animationDelay: '0ms' }}></div>
+          <div className={`w-2 h-2 rounded-full animate-pulse ${
+            isDarkMode ? 'bg-purple-400' : 'bg-purple-600'
+          }`} style={{ animationDelay: '200ms' }}></div>
+          <div className={`w-2 h-2 rounded-full animate-pulse ${
+            isDarkMode ? 'bg-pink-400' : 'bg-pink-600'
+          }`} style={{ animationDelay: '400ms' }}></div>
+        </div>
       </div>
     </div>
   );
 
+  // Animated Background Component
+  const AnimatedBackground = () => {
+    const shapes = Array.from({ length: 15 }, (_, i) => ({
+      id: i,
+      size: Math.random() * 100 + 50,
+      x: Math.random() * 100,
+      y: Math.random() * 100,
+      rotation: Math.random() * 360,
+      duration: Math.random() * 20 + 10,
+      delay: Math.random() * 5,
+      shape: Math.random() > 0.5 ? 'circle' : 'polygon'
+    }));
+
+    return (
+      <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
+        {shapes.map((shape) => (
+          <div
+            key={shape.id}
+            className={`absolute opacity-20 ${
+              isDarkMode ? 'bg-white' : 'bg-gray-900'
+            }`}
+            style={{
+              left: `${shape.x}%`,
+              top: `${shape.y}%`,
+              width: `${shape.size}px`,
+              height: `${shape.size}px`,
+              transform: `rotate(${shape.rotation}deg)`,
+              animation: `float-${shape.id} ${shape.duration}s ease-in-out infinite`,
+              animationDelay: `${shape.delay}s`,
+              borderRadius: shape.shape === 'circle' ? '50%' : '0',
+              clipPath: shape.shape === 'polygon' 
+                ? 'polygon(50% 0%, 0% 100%, 100% 100%)'
+                : 'none'
+            }}
+          />
+        ))}
+        
+        <style jsx>{`
+          ${shapes.map(shape => `
+            @keyframes float-${shape.id} {
+              0%, 100% { 
+                transform: translateY(0px) rotate(${shape.rotation}deg) scale(1);
+                opacity: 0.1;
+              }
+              50% { 
+                transform: translateY(-${shape.size/2}px) rotate(${shape.rotation + 180}deg) scale(1.2);
+                opacity: 0.3;
+              }
+            }
+          `).join('')}
+        `}</style>
+      </div>
+    );
+  };
+
   const NavigationDot = ({ section, label, isActive }) => (
     <button
       onClick={() => setActiveSection(section)}
-      className={`group relative p-2 transition-all duration-300 ${
+      className={`group relative p-2 transition-all duration-300 ease-out ${
         isActive ? 'scale-110' : 'hover:scale-105'
       }`}
     >
-      <div
-        className={`w-3 h-3 rounded-full transition-all duration-300 ${
-          isActive
-            ? isDarkMode
-              ? 'bg-white shadow-lg shadow-white/50'
-              : 'bg-gray-800 shadow-lg shadow-gray-800/50'
-            : isDarkMode
-              ? 'bg-gray-600 hover:bg-gray-400'
-              : 'bg-gray-400 hover:bg-gray-600'
-        }`}
-      />
-      <span className={`absolute left-6 top-1/2 -translate-y-1/2 text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap ${
-        isDarkMode ? 'text-white' : 'text-gray-800'
+      <div className={`w-2 h-2 rounded-full transition-all duration-300 ${
+        isActive
+          ? isDarkMode 
+            ? 'bg-white scale-125 shadow-lg shadow-white/20' 
+            : 'bg-gray-900 scale-125 shadow-lg shadow-gray-900/20'
+          : isDarkMode
+            ? 'bg-gray-500 hover:bg-gray-300 group-hover:scale-110'
+            : 'bg-gray-400 hover:bg-gray-600 group-hover:scale-110'
+      }`} />
+      
+      <span className={`absolute left-6 top-1/2 -translate-y-1/2 text-sm font-medium opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all duration-300 whitespace-nowrap px-3 py-1.5 rounded-lg backdrop-blur-xl ${
+        isDarkMode 
+          ? 'text-white bg-gray-800/90 border border-gray-700/50' 
+          : 'text-gray-900 bg-white/90 border border-gray-200/50 shadow-lg'
       }`}>
         {label}
       </span>
@@ -73,148 +150,126 @@ const TanishqPortfolio = () => {
 
   const projects = [
     {
-      title: "YouTube Video Summarizer",
-      description: "AI-powered tool that summarizes YouTube or local videos into downloadable notes using advanced NLP techniques.",
-      tech: ["Python", "NLP", "AI/ML"],
-      github: "https://github.com/Bittb/Ai-Powered-Video-Summarizer-and-Text-Generator"
+      title: "AI Video Summarizer",
+      description: "Intelligent tool that transforms YouTube and local videos into comprehensive, downloadable summaries using advanced natural language processing.",
+      tech: ["Python", "NLP", "Machine Learning", "FastAPI"],
+      github: "https://github.com/Bittb/Ai-Powered-Video-Summarizer-and-Text-Generator",
+      gradient: "from-violet-500/20 to-purple-500/20",
+      hoverGradient: "from-violet-500/30 to-purple-500/30"
     },
     {
-      title: "Daily Expense Tracker",
-      description: "Flask-based web application to track and visualize daily expenses and income with intuitive interface.",
-      tech: ["Flask", "Python", "JavaScript"],
-      github: "https://github.com/Bittb/Daily-Expense-Tracker"
+      title: "Expense Analytics Dashboard",
+      description: "Full-stack web application featuring real-time expense tracking, intelligent categorization, and interactive data visualizations.",
+      tech: ["Flask", "JavaScript", "Chart.js", "SQLite"],
+      github: "https://github.com/Bittb/Daily-Expense-Tracker",
+      gradient: "from-blue-500/20 to-cyan-500/20",
+      hoverGradient: "from-blue-500/30 to-cyan-500/30"
     },
     {
-      title: "Network Intrusion Detection",
-      description: "Advanced system that detects malicious network packets using machine learning algorithms.",
-      tech: ["Machine Learning", "Python", "Cybersecurity"],
-      github: "https://github.com/Bittb/Network-Intrusion-Detection-System"
+      title: "Network Security Guardian",
+      description: "Advanced intrusion detection system leveraging machine learning algorithms to identify and neutralize malicious network activities.",
+      tech: ["Python", "Scikit-learn", "Network Analysis", "TensorFlow"],
+      github: "https://github.com/Bittb/Network-Intrusion-Detection-System",
+      gradient: "from-emerald-500/20 to-teal-500/20",
+      hoverGradient: "from-emerald-500/30 to-teal-500/30"
     },
     {
-      title: "Sentiment Analysis Web App",
-      description: "Analyzes sentiment from CSV files and individual inputs with detailed visualized breakdowns.",
-      tech: ["NLP", "Data Visualization", "Python"],
-      github: "https://github.com/Bittb/Sentiment-Analysis"
+      title: "Sentiment Intelligence Engine",
+      description: "Sophisticated sentiment analysis platform with CSV processing capabilities and comprehensive visualization dashboards.",
+      tech: ["Python", "NLTK", "Pandas", "Plotly"],
+      github: "https://github.com/Bittb/Sentiment-Analysis",
+      gradient: "from-orange-500/20 to-red-500/20",
+      hoverGradient: "from-orange-500/30 to-red-500/30"
     }
   ];
 
   const skills = [
-    { category: "Languages", items: ["Python", "JavaScript", "C++", "C", "Java"] },
-    { category: "Web Technologies", items: ["HTML", "CSS", "Flask", "React"] },
-    { category: "Databases", items: ["MySQL", "MongoDB"] },
-    { category: "Tools", items: ["Git", "VS Code"] },
-    { category: "Concepts", items: ["AI/ML", "Cybersecurity", "Digital Forensics"] }
+    { 
+      category: "Programming Languages", 
+      items: ["Python", "JavaScript", "C++", "Java", "TypeScript"],
+      icon: "⚡",
+      color: "from-blue-500 to-indigo-600"
+    },
+    { 
+      category: "Web Development", 
+      items: ["React", "Flask", "Node.js", "HTML5", "CSS3", "Tailwind"],
+      icon: "🌐",
+      color: "from-green-500 to-emerald-600"
+    },
+    { 
+      category: "Data & AI/ML", 
+      items: ["TensorFlow", "Scikit-learn", "Pandas", "NumPy", "OpenCV"],
+      icon: "🤖",
+      color: "from-purple-500 to-violet-600"
+    },
+    { 
+      category: "Database Systems", 
+      items: ["MySQL", "MongoDB", "PostgreSQL", "SQLite"],
+      icon: "🗃️",
+      color: "from-orange-500 to-amber-600"
+    },
+    { 
+      category: "Development Tools", 
+      items: ["Git", "Docker", "VS Code", "Postman", "Linux"],
+      icon: "🛠️",
+      color: "from-gray-500 to-slate-600"
+    },
+    { 
+      category: "Specializations", 
+      items: ["Cybersecurity", "Digital Forensics", "Cloud Computing"],
+      icon: "🔒",
+      color: "from-red-500 to-pink-600"
+    }
   ];
 
-  const bgClass = isDarkMode
-    ? 'bg-gradient-to-br from-gray-900 via-black to-gray-800'
-    : 'bg-gradient-to-br from-purple-50 via-blue-50 to-pink-50';
- 
-  const textClass = isDarkMode ? 'text-white' : 'text-gray-800';
+  const toggleDarkMode = () => {
+    setIsDarkMode(!isDarkMode);
+  };
+
+  const bgClass = isDarkMode 
+    ? 'bg-slate-950' 
+    : 'bg-gray-50';
+  
+  const textClass = isDarkMode ? 'text-gray-100' : 'text-gray-900';
   const secondaryTextClass = isDarkMode ? 'text-gray-300' : 'text-gray-600';
-  const borderClass = isDarkMode ? 'border-gray-700' : 'border-gray-200';
-  const hoverBorderClass = isDarkMode ? 'hover:border-gray-500' : 'hover:border-gray-400';
+  const mutedTextClass = isDarkMode ? 'text-gray-400' : 'text-gray-500';
 
   if (isLoading) {
     return <LoadingScreen />;
   }
 
   return (
-    <div
+    <div 
       ref={containerRef}
-      className={`min-h-screen ${bgClass} ${textClass} font-light transition-all duration-500 relative overflow-hidden`}
+      className={`min-h-screen ${bgClass} ${textClass} transition-all duration-500 relative overflow-x-hidden`}
+      style={{ fontFamily: '"Inter", "SF Pro Display", -apple-system, BlinkMacSystemFont, sans-serif' }}
     >
-      {/* Dynamic Background Blobs */}
-      {!isDarkMode && (
-        <>
-          {/* Blob 1 - Top Left */}
-          <div
-            className="absolute w-96 h-96 rounded-full opacity-60 blur-3xl transition-all duration-1000 ease-out pointer-events-none"
-            style={{
-              background: 'linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)',
-              transform: `translate(${mousePosition.x * 0.02}px, ${mousePosition.y * 0.02}px)`,
-              left: '-10%',
-              top: '-10%'
-            }}
-          />
-         
-          {/* Blob 2 - Top Right */}
-          <div
-            className="absolute w-80 h-80 rounded-full opacity-50 blur-3xl transition-all duration-700 ease-out pointer-events-none"
-            style={{
-              background: 'linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%)',
-              transform: `translate(${mousePosition.x * -0.015}px, ${mousePosition.y * 0.025}px)`,
-              right: '-5%',
-              top: '5%'
-            }}
-          />
-         
-          {/* Blob 3 - Bottom Left */}
-          <div
-            className="absolute w-72 h-72 rounded-full opacity-40 blur-3xl transition-all duration-900 ease-out pointer-events-none"
-            style={{
-              background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-              transform: `translate(${mousePosition.x * 0.03}px, ${mousePosition.y * -0.02}px)`,
-              left: '10%',
-              bottom: '10%'
-            }}
-          />
-         
-          {/* Blob 4 - Center Right */}
-          <div
-            className="absolute w-64 h-64 rounded-full opacity-35 blur-3xl transition-all duration-1200 ease-out pointer-events-none"
-            style={{
-              background: 'linear-gradient(135deg, #89f7fe 0%, #66a6ff 100%)',
-              transform: `translate(${mousePosition.x * -0.025}px, ${mousePosition.y * 0.015}px)`,
-              right: '15%',
-              top: '40%'
-            }}
-          />
-         
-          {/* Blob 5 - Bottom Center */}
-          <div
-            className="absolute w-88 h-88 rounded-full opacity-30 blur-3xl transition-all duration-800 ease-out pointer-events-none"
-            style={{
-              background: 'linear-gradient(135deg, #d299c2 0%, #fef9d7 100%)',
-              transform: `translate(${mousePosition.x * 0.01}px, ${mousePosition.y * -0.03}px)`,
-              left: '50%',
-              bottom: '-5%'
-            }}
-          />
-        </>
-      )}
+      {/* Animated Background */}
+      <AnimatedBackground />
 
-      {/* Dark Mode Toggle */}
-      <button
-        onClick={toggleDarkMode}
-        className={`fixed top-8 right-8 z-50 p-3 rounded-full border transition-all duration-300 backdrop-blur-sm ${
-          isDarkMode
-            ? 'bg-gray-800/80 border-gray-600 hover:bg-gray-700/80 text-white'
-            : 'bg-white/80 border-gray-300 hover:bg-gray-50/80 text-gray-900'
-        }`}
-      >
-        {isDarkMode ? '☀️' : '🌙'}
-      </button>
-
-      {/* Menu Toggle - Top Right */}
-      <button className={`fixed top-8 right-20 z-50 p-3 transition-colors duration-300 ${
-        isDarkMode ? 'text-white hover:text-gray-300' : 'text-gray-800 hover:text-gray-600'
-      }`}>
-        <div className="grid grid-cols-3 gap-1">
-          {[...Array(9)].map((_, i) => (
-            <div key={i} className={`w-1 h-1 rounded-full ${
-              isDarkMode ? 'bg-white' : 'bg-gray-800'
-            }`} />
-          ))}
+      {/* Enhanced Header */}
+      <header className="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl border-b border-gray-200/10">
+        <div className="flex items-center justify-between px-8 py-6">
+          <div className={`text-xl font-semibold transition-all duration-300 hover:scale-105 cursor-pointer ${textClass}`}>
+            TB
+          </div>
+          
+          <div className="flex items-center space-x-4">
+            <button
+              onClick={toggleDarkMode}
+              className={`p-3 rounded-xl border transition-all duration-300 hover:scale-105 backdrop-blur-xl ${
+                isDarkMode 
+                  ? 'bg-gray-800/50 border-gray-700/50 hover:bg-gray-700/50 text-gray-200' 
+                  : 'bg-white/50 border-gray-200/50 hover:bg-gray-50/50 text-gray-800 shadow-sm'
+              }`}
+            >
+              <div className="w-5 h-5 flex items-center justify-center">
+                {isDarkMode ? '☀️' : '🌙'}
+              </div>
+            </button>
+          </div>
         </div>
-      </button>
-
-      {/* Language Toggle - Top Right */}
-      <div className={`fixed top-8 right-32 z-50 text-sm font-medium ${
-        isDarkMode ? 'text-white' : 'text-gray-800'
-      }`}>
-        EN
-      </div>
+      </header>
 
       {/* Navigation */}
       <nav className="fixed right-8 top-1/2 -translate-y-1/2 z-40 flex flex-col space-y-4">
@@ -225,54 +280,48 @@ const TanishqPortfolio = () => {
         <NavigationDot section="contact" label="Contact" isActive={activeSection === 'contact'} />
       </nav>
 
-      {/* Logo - Top Left */}
-      <div className="fixed top-8 left-8 z-50">
-        <div className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
-          TB
-        </div>
-      </div>
-
       {/* Home Section */}
       {activeSection === 'home' && (
-        <section className="min-h-screen flex items-center justify-center px-8 relative z-10">
-          <div className="text-center max-w-4xl">
-            <div className="mb-12">
-              <h1 className={`text-5xl md:text-7xl font-light tracking-wide mb-4 ${
-                isDarkMode ? 'text-white' : 'text-gray-800'
-              }`}>
-                HEY, I'M <span className="font-bold">TANISHQ BHARDWAJ</span>
-              </h1>
-              <h2 className={`text-3xl md:text-4xl font-light mb-8 ${
-                isDarkMode ? 'text-gray-300' : 'text-gray-600'
-              }`}>
-                BUT YOU CAN CALL ME <span className="font-semibold">TANISHQ</span>
-              </h2>
-              <div className={`text-lg md:text-xl space-y-2 font-light ${secondaryTextClass}`}>
-                <p>I am a web developer, AI/ML enthusiast</p>
-                <p>& cybersecurity explorer</p>
+        <section className="min-h-screen flex items-center justify-center px-8 pt-24 relative z-10">
+          <div className="text-center max-w-5xl">
+            <div className="space-y-8 mb-12">
+              <div className={`text-sm font-medium tracking-widest uppercase ${mutedTextClass}`}>
+                Web Developer & AI Enthusiast
               </div>
+              
+              <h1 className={`text-6xl md:text-8xl font-light tracking-tight ${textClass}`}>
+                <span className="block mb-2">Hello, I'm</span>
+                <span className="font-medium bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+                  Tanishq
+                </span>
+              </h1>
+              
+              <p className={`text-xl md:text-2xl font-light leading-relaxed max-w-3xl mx-auto ${secondaryTextClass}`}>
+                I craft digital experiences through clean code, innovative AI solutions, 
+                and robust cybersecurity practices.
+              </p>
             </div>
-           
+            
             <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
-              <button
+              <button 
                 onClick={() => setActiveSection('projects')}
-                className={`group flex items-center gap-2 px-6 py-3 border rounded-full transition-all duration-300 ${
-                  isDarkMode
-                    ? 'border-gray-600 hover:border-gray-400 text-gray-300 hover:text-white'
-                    : 'border-gray-400 hover:border-gray-600 text-gray-600 hover:text-gray-800'
+                className={`group px-8 py-4 rounded-full border-2 transition-all duration-300 hover:scale-105 backdrop-blur-md ${
+                  isDarkMode 
+                    ? 'border-gray-600 hover:border-gray-400 text-gray-300 hover:text-white hover:bg-white/5' 
+                    : 'border-gray-300 hover:border-gray-600 text-gray-700 hover:text-gray-900 hover:bg-gray-900/5'
                 }`}
               >
-                <span>→ see my projects</span>
+                <span className="flex items-center gap-2">
+                  View My Work
+                  <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>
+                </span>
               </button>
-              <button
-                onClick={() => setActiveSection('about')}
-                className={`group flex items-center gap-2 px-6 py-3 border rounded-full transition-all duration-300 ${
-                  isDarkMode
-                    ? 'border-gray-600 hover:border-gray-400 text-gray-300 hover:text-white'
-                    : 'border-gray-400 hover:border-gray-600 text-gray-600 hover:text-gray-800'
-                }`}
+              
+              <button 
+                onClick={() => setActiveSection('contact')}
+                className={`px-8 py-4 rounded-full transition-all duration-300 hover:scale-105 bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:shadow-xl hover:shadow-purple-500/25 backdrop-blur-md`}
               >
-                <span>→ learn more</span>
+                Get In Touch
               </button>
             </div>
           </div>
@@ -281,33 +330,63 @@ const TanishqPortfolio = () => {
 
       {/* About Section */}
       {activeSection === 'about' && (
-        <section className="min-h-screen flex items-center justify-center px-8 relative z-10">
-          <div className="max-w-4xl">
-            <h2 className="text-4xl md:text-6xl font-thin mb-12 text-center">About Me</h2>
-            <div className="grid md:grid-cols-2 gap-12 items-center">
-              <div className={`space-y-6 leading-relaxed ${secondaryTextClass}`}>
-                <p className="text-lg">
-                  I'm a passionate Web Developer from Delhi with a love for building clean,
-                  user-focused web experiences.
-                </p>
-                <p>
-                  I work primarily with Python, JavaScript, and modern web technologies—and I explore
-                  AI/ML just for the thrill of solving real-world problems creatively.
-                </p>
-                <p>
-                  Whether it's crafting intuitive UIs, developing intelligent systems, or diving into
-                  cybersecurity challenges, I'm always looking to learn, create, and collaborate.
-                </p>
-              </div>
-              <div className="text-center">
-                <div className={`w-48 h-48 mx-auto border rounded-full flex items-center justify-center backdrop-blur-sm ${
-                  isDarkMode ? 'border-gray-600 bg-gray-800/20' : 'border-gray-300 bg-white/20'
-                }`}>
-                  <span className="text-6xl">👨‍💻</span>
+        <section className="min-h-screen flex items-center justify-center px-8 pt-24 relative z-10">
+          <div className="max-w-6xl w-full">
+            <div className="grid lg:grid-cols-2 gap-16 items-center">
+              <div className="space-y-8">
+                <div>
+                  <h2 className={`text-5xl md:text-6xl font-light mb-6 ${textClass}`}>
+                    About Me
+                  </h2>
+                  <div className={`w-20 h-1 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full`}></div>
                 </div>
-                <div className={`mt-6 text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                  <p>B.Tech in Information Technology</p>
-                  <p>Jaypee University (2026)</p>
+                
+                <div className={`space-y-6 text-lg leading-relaxed ${secondaryTextClass}`}>
+                  <p>
+                    I'm a passionate developer from Delhi, currently pursuing B.Tech in Information Technology 
+                    at Jaypee University. My journey spans across web development, artificial intelligence, 
+                    and cybersecurity domains.
+                  </p>
+                  <p>
+                    With expertise in Python, JavaScript, and modern frameworks, I build scalable applications 
+                    that solve real-world problems. I'm particularly fascinated by the intersection of AI/ML 
+                    and practical software solutions.
+                  </p>
+                  <p>
+                    When I'm not coding, you'll find me exploring the latest in cybersecurity, contributing to 
+                    open-source projects, or experimenting with new technologies that push the boundaries of 
+                    what's possible.
+                  </p>
+                </div>
+                
+                <div className="flex flex-wrap gap-4">
+                  {['Problem Solver', 'Team Player', 'Continuous Learner'].map((trait, index) => (
+                    <span 
+                      key={index}
+                      className={`px-4 py-2 rounded-full text-sm font-medium backdrop-blur-md ${
+                        isDarkMode 
+                          ? 'bg-gray-800/50 text-gray-300 border border-gray-700/50' 
+                          : 'bg-white/50 text-gray-700 border border-gray-200/50'
+                      }`}
+                    >
+                      {trait}
+                    </span>
+                  ))}
+                </div>
+              </div>
+              
+              <div className="text-center lg:text-right">
+                <div className={`inline-block p-8 rounded-2xl backdrop-blur-xl border transition-all duration-500 hover:scale-105 ${
+                  isDarkMode 
+                    ? 'bg-gray-800/20 border-gray-700/50' 
+                    : 'bg-white/30 border-gray-200/50'
+                }`}>
+                  <div className="text-8xl mb-6">👨‍💻</div>
+                  <div className={`space-y-2 ${mutedTextClass}`}>
+                    <p className="font-medium">B.Tech Information Technology</p>
+                    <p>Jaypee University</p>
+                    <p>Expected 2026</p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -317,24 +396,43 @@ const TanishqPortfolio = () => {
 
       {/* Skills Section */}
       {activeSection === 'skills' && (
-        <section className="min-h-screen flex items-center justify-center px-8 relative z-10">
-          <div className="max-w-6xl w-full">
-            <h2 className="text-4xl md:text-6xl font-thin mb-12 text-center">Skills & Tools</h2>
+        <section className="min-h-screen flex items-center justify-center px-8 pt-24 relative z-10">
+          <div className="max-w-7xl w-full">
+            <div className="text-center mb-16">
+              <h2 className={`text-5xl md:text-6xl font-light mb-6 ${textClass}`}>
+                Skills & Expertise
+              </h2>
+              <div className="w-20 h-1 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full mx-auto"></div>
+            </div>
+            
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
               {skills.map((skillGroup, index) => (
-                <div key={index} className={`border p-6 rounded-lg backdrop-blur-sm transition-colors duration-300 ${
-                  isDarkMode
-                    ? 'border-gray-700 bg-gray-800/20 hover:border-gray-500'
-                    : 'border-gray-200 bg-white/20 hover:border-gray-400'
-                }`}>
-                  <h3 className={`text-xl font-light mb-4 ${textClass}`}>{skillGroup.category}</h3>
-                  <div className="space-y-2">
+                <div 
+                  key={index} 
+                  className={`group p-8 rounded-2xl backdrop-blur-xl border transition-all duration-500 hover:scale-105 hover:-translate-y-1 ${
+                    isDarkMode 
+                      ? 'bg-gray-800/20 border-gray-700/50 hover:bg-gray-800/30 hover:border-gray-600/50' 
+                      : 'bg-white/30 border-gray-200/50 hover:bg-white/50 hover:border-gray-300/50'
+                  }`}
+                  style={{ transitionDelay: `${index * 100}ms` }}
+                >
+                  <div className="flex items-center mb-6">
+                    <span className="text-2xl mr-4 transition-transform duration-300 group-hover:scale-110">
+                      {skillGroup.icon}
+                    </span>
+                    <h3 className={`text-xl font-semibold ${textClass}`}>
+                      {skillGroup.category}
+                    </h3>
+                  </div>
+                  
+                  <div className="space-y-3">
                     {skillGroup.items.map((skill, skillIndex) => (
-                      <div key={skillIndex} className={`text-sm transition-colors duration-200 ${
-                        isDarkMode
-                          ? 'text-gray-400 hover:text-white'
-                          : 'text-gray-600 hover:text-gray-900'
-                      }`}>
+                      <div 
+                        key={skillIndex} 
+                        className={`flex items-center text-sm transition-all duration-300 hover:translate-x-2 ${secondaryTextClass} hover:${textClass.replace('text-', 'hover:text-')}`}
+                        style={{ transitionDelay: `${skillIndex * 50}ms` }}
+                      >
+                        <span className="w-2 h-2 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 mr-3"></span>
                         {skill}
                       </div>
                     ))}
@@ -348,43 +446,63 @@ const TanishqPortfolio = () => {
 
       {/* Projects Section */}
       {activeSection === 'projects' && (
-        <section className="min-h-screen flex items-center justify-center px-8 py-16 relative z-10">
-          <div className="max-w-6xl w-full">
-            <h2 className="text-4xl md:text-6xl font-thin mb-12 text-center">Selected Projects</h2>
-            <div className="grid md:grid-cols-2 gap-8">
+        <section className="min-h-screen flex items-center justify-center px-8 pt-24 pb-16 relative z-10">
+          <div className="max-w-7xl w-full">
+            <div className="text-center mb-16">
+              <h2 className={`text-5xl md:text-6xl font-light mb-6 ${textClass}`}>
+                Featured Projects
+              </h2>
+              <div className="w-20 h-1 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full mx-auto"></div>
+            </div>
+            
+            <div className="grid lg:grid-cols-2 gap-8">
               {projects.map((project, index) => (
-                <div key={index} className={`group border p-8 rounded-lg backdrop-blur-sm transition-all duration-300 ${
-                  isDarkMode
-                    ? 'border-gray-700 bg-gray-800/20 hover:border-gray-500'
-                    : 'border-gray-200 bg-white/20 hover:border-gray-400'
-                }`}>
-                  <div className="mb-6">
-                    <h3 className={`text-2xl font-light mb-4 group-hover:opacity-75 transition-opacity duration-300 ${textClass}`}>
+                <div 
+                  key={index} 
+                  className={`group p-8 rounded-2xl backdrop-blur-xl border transition-all duration-500 hover:scale-[1.02] hover:-translate-y-2 relative overflow-hidden ${
+                    isDarkMode 
+                      ? 'bg-gray-800/20 border-gray-700/50 hover:bg-gray-800/30' 
+                      : 'bg-white/30 border-gray-200/50 hover:bg-white/50'
+                  }`}
+                  style={{ transitionDelay: `${index * 100}ms` }}
+                >
+                  <div className={`absolute inset-0 bg-gradient-to-br ${project.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500`}></div>
+                  
+                  <div className="relative z-10">
+                    <h3 className={`text-2xl font-semibold mb-4 ${textClass}`}>
                       {project.title}
                     </h3>
+                    
                     <p className={`leading-relaxed mb-6 ${secondaryTextClass}`}>
                       {project.description}
                     </p>
-                    <div className="flex flex-wrap gap-2 mb-6">
+                    
+                    <div className="flex flex-wrap gap-2 mb-8">
                       {project.tech.map((tech, techIndex) => (
-                        <span key={techIndex} className={`text-xs border px-3 py-1 rounded-full ${
-                          isDarkMode
-                            ? 'border-gray-600 text-gray-300 bg-gray-700/30'
-                            : 'border-gray-300 text-gray-600 bg-white/30'
-                        }`}>
+                        <span 
+                          key={techIndex} 
+                          className={`px-3 py-1 text-xs font-medium rounded-full transition-all duration-300 hover:scale-105 backdrop-blur-md ${
+                            isDarkMode 
+                              ? 'bg-gray-700/50 text-gray-300 border border-gray-600/50' 
+                              : 'bg-gray-100/50 text-gray-700 border border-gray-200/50'
+                          }`}
+                        >
                           {tech}
                         </span>
                       ))}
                     </div>
+                    
+                    <a
+                      href={project.github}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={`inline-flex items-center gap-2 font-medium transition-all duration-300 hover:gap-3 ${textClass}`}
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <span>View Project</span>
+                      <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>
+                    </a>
                   </div>
-                  <a
-                    href={project.github}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={`inline-block text-sm transition-colors duration-300 border-b border-transparent hover:opacity-75 ${textClass}`}
-                  >
-                    View Code →
-                  </a>
                 </div>
               ))}
             </div>
@@ -394,56 +512,51 @@ const TanishqPortfolio = () => {
 
       {/* Contact Section */}
       {activeSection === 'contact' && (
-        <section className="min-h-screen flex items-center justify-center px-8 relative z-10">
-          <div className="max-w-4xl text-center">
-            <h2 className="text-4xl md:text-6xl font-thin mb-12">Let's Work Together</h2>
-            <div className="space-y-8">
-              <div className="space-y-4">
-                <a
-                  href="mailto:tanishqb41@gmail.com"
-                  className={`block text-2xl hover:opacity-75 transition-opacity duration-300 ${textClass}`}
-                >
-                  tanishqb41@gmail.com
-                </a>
-                <div className={`w-16 h-px mx-auto ${isDarkMode ? 'bg-white' : 'bg-gray-800'}`}></div>
-              </div>
+        <section className="min-h-screen flex items-center justify-center px-8 pt-24 relative z-10">
+          <div className="max-w-4xl w-full text-center">
+            <div className="mb-16">
+              <h2 className={`text-5xl md:text-6xl font-light mb-6 ${textClass}`}>
+                Let's Connect
+              </h2>
+              <div className="w-20 h-1 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full mx-auto mb-8"></div>
+              <p className={`text-xl ${secondaryTextClass} max-w-2xl mx-auto`}>
+                I'm always interested in discussing new opportunities, innovative projects, 
+                or just having a conversation about technology.
+              </p>
+            </div>
+            
+            <div className="space-y-12">
+              <a
+                href="mailto:tanishqb41@gmail.com"
+                className={`block text-3xl md:text-4xl font-light transition-all duration-300 hover:scale-105 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent hover:from-purple-600 hover:to-pink-600`}
+              >
+                tanishqb41@gmail.com
+              </a>
+              
               <div className="flex justify-center space-x-12">
-                <a
-                  href="https://github.com/Bittb"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={`transition-colors duration-300 ${
-                    isDarkMode
-                      ? 'text-gray-400 hover:text-white'
-                      : 'text-gray-600 hover:text-gray-900'
-                  }`}
-                >
-                  GitHub
-                </a>
-                <a
-                  href="https://www.linkedin.com/in/tanishq-bhardwaj-51b061250/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={`transition-colors duration-300 ${
-                    isDarkMode
-                      ? 'text-gray-400 hover:text-white'
-                      : 'text-gray-600 hover:text-gray-900'
-                  }`}
-                >
-                  LinkedIn
-                </a>
-                <a
-                  href="Tanishq_Bhardwaj_Resume.pdf"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={`transition-colors duration-300 ${
-                    isDarkMode
-                      ? 'text-gray-400 hover:text-white'
-                      : 'text-gray-600 hover:text-gray-900'
-                  }`}
-                >
-                  Resume
-                </a>
+                {[
+                  { name: 'GitHub', url: 'https://github.com/Bittb', icon: '🐙' },
+                  { name: 'LinkedIn', url: 'https://www.linkedin.com/in/tanishq-bhardwaj-51b061250/', icon: '💼' },
+                  { name: 'Resume', url: 'Tanishq_Bhardwaj_Resume.pdf', icon: '📄' }
+                ].map((link, index) => (
+                  <a
+                    key={index}
+                    href={link.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={`group flex flex-col items-center space-y-2 p-4 rounded-xl transition-all duration-300 hover:scale-110 hover:-translate-y-1 backdrop-blur-md ${
+                      isDarkMode 
+                        ? 'text-gray-400 hover:text-white hover:bg-gray-800/20' 
+                        : 'text-gray-600 hover:text-gray-900 hover:bg-white/20'
+                    }`}
+                    style={{ transitionDelay: `${index * 100}ms` }}
+                  >
+                    <span className="text-2xl transition-transform duration-300 group-hover:scale-125">
+                      {link.icon}
+                    </span>
+                    <span className="font-medium">{link.name}</span>
+                  </a>
+                ))}
               </div>
             </div>
           </div>
@@ -451,12 +564,11 @@ const TanishqPortfolio = () => {
       )}
 
       {/* Footer */}
-      <footer className={`fixed bottom-8 left-8 text-xs z-40 ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>
-        <p>Created and developed by Tanishq © 2025</p>
+      <footer className={`fixed bottom-8 left-8 text-sm z-40 ${mutedTextClass}`}>
+        <p>© 2025 Tanishq Bhardwaj. Crafted with passion.</p>
       </footer>
     </div>
   );
 };
 
 export default TanishqPortfolio;
-
