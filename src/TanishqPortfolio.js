@@ -226,7 +226,7 @@ const TanishqPortfolio = () => {
 
   const projects = [
     {
-      title: "AI Video Summarizer",
+      title: "AutoNotes: AI Video Summarizer",
       description: "Intelligent tool that transforms YouTube and local videos into comprehensive, downloadable summaries using advanced natural language processing.",
       tech: ["Python", "NLP", "Machine Learning", "FastAPI"],
       github: "https://github.com/Bittb/Ai-Powered-Video-Summarizer-and-Text-Generator",
@@ -262,7 +262,7 @@ const TanishqPortfolio = () => {
   const skills = [
     { 
       category: "Programming Languages", 
-      items: ["Python", "JavaScript", "C++", "Java", "TypeScript"],
+      items: ["Python", "JavaScript", "C++", "Java", "C"],
       icon: "⚡",
       color: "from-blue-500 to-indigo-600"
     },
@@ -291,8 +291,8 @@ const TanishqPortfolio = () => {
       color: "from-gray-500 to-slate-600"
     },
     { 
-      category: "Specializations", 
-      items: ["Cybersecurity", "Digital Forensics", "Cloud Computing"],
+      category: "CourseWorks", 
+      items: ["Cybersecurity", "Digital Forensics", "AI/ML", "DSA"],
       icon: "🔒",
       color: "from-red-500 to-pink-600"
     }
@@ -424,13 +424,12 @@ const TanishqPortfolio = () => {
                     and cybersecurity domains.
                   </p>
                   <p>
-                    With expertise in Python, JavaScript, and modern frameworks, I build scalable applications 
-                    that solve real-world problems. I'm particularly fascinated by the intersection of AI/ML 
+                    With expertise in Python, JavaScript, and modern frameworks, I build scalable web applications 
+                    for real-world scenarios. I'm particularly fascinated by the intersection of AI/ML 
                     and practical software solutions.
                   </p>
                   <p>
-                    When I'm not coding, you'll find me exploring the latest in cybersecurity, contributing to 
-                    open-source projects, or experimenting with new technologies that push the boundaries of 
+                    When I'm not coding, you'll find me exploring the latest in cybersecurity, or experimenting with new technologies that push the boundaries of 
                     what's possible.
                   </p>
                 </div>
