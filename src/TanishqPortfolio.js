@@ -611,7 +611,7 @@ const TanishqPortfolio = () => {
                     <div>
                       <p className={`font-medium ${textClass}`}>Email</p>
                       <a 
-                        href="mailto:tanishqbhardwaj@example.com" 
+                        href="mailto:tanishqb41@gmail.com" 
                         className={`${secondaryTextClass} hover:text-blue-600 transition-colors duration-300`}
                       >
                         tanishqbhardwaj@example.com
