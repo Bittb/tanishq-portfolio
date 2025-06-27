@@ -644,7 +644,7 @@ const TanishqPortfolio = () => {
                     <div>
                       <p className={`font-medium ${textClass}`}>LinkedIn</p>
                       <a 
-                        href="https://linkedin.com/in/tanishq-bhardwaj" 
+                        href="https://linkedin.com/in/tanishqbhardwaj" 
                         target="_blank" 
                         rel="noopener noreferrer"
                         className={`${secondaryTextClass} hover:text-blue-600 transition-colors duration-300`}
@@ -725,7 +725,7 @@ const TanishqPortfolio = () => {
                   </div>
                 </a>
                 <a
-                  href="https://linkedin.com/in/tanishq-bhardwaj"
+                  href="https://linkedin.com/in/tanishqbhardwaj"
                   target="_blank"
                   rel="noopener noreferrer"
                   className={`p-4 rounded-full backdrop-blur-xl border transition-all duration-300 hover:scale-110 ${
