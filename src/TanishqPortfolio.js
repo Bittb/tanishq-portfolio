@@ -614,7 +614,7 @@ const TanishqPortfolio = () => {
                         href="mailto:tanishqb41@gmail.com" 
                         className={`${secondaryTextClass} hover:text-blue-600 transition-colors duration-300`}
                       >
-                        tanishqbhardwaj@example.com
+                        tanishqb41@gmail.com
                       </a>
                     </div>
                   </div>
