@@ -66,8 +66,8 @@ const TanishqPortfolio = () => {
     </div>
   );
 
- // Enhanced Animated Blob Background Component
-  const AnimatedBlobBackground = () => {
+  // Enhanced Animated Background Component
+  const AnimatedBackground = () => {
     const blobs = Array.from({ length: 12 }, (_, i) => ({
       id: i,
       size: Math.random() * 300 + 150,
@@ -195,7 +195,6 @@ const TanishqPortfolio = () => {
       </>
     );
   };
-
 
   const NavigationDot = ({ section, label, isActive }) => (
     <button
@@ -477,40 +476,37 @@ const TanishqPortfolio = () => {
               <h2 className={`text-5xl md:text-6xl font-light mb-6 ${textClass}`}>
                 Skills & Expertise
               </h2>
-              <div className="w-20 h-1 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full mx-auto"></div>
+              <div className={`w-20 h-1 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full mx-auto`}></div>
             </div>
-            
+
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {skills.map((skillGroup, index) => (
-                <div 
-                  key={index} 
-                  className={`group p-8 rounded-2xl backdrop-blur-xl border transition-all duration-500 hover:scale-105 hover:-translate-y-1 ${
+              {skills.map((skill, index) => (
+                <div
+                  key={index}
+                  className={`group p-8 rounded-2xl backdrop-blur-xl border transition-all duration-500 hover:scale-105 hover:-translate-y-2 ${
                     isDarkMode 
-                      ? 'bg-gray-800/20 border-gray-700/50 hover:bg-gray-800/30 hover:border-gray-600/50' 
-                      : 'bg-white/30 border-gray-200/50 hover:bg-white/50 hover:border-gray-300/50'
+                      ? 'bg-gray-800/20 border-gray-700/50 hover:bg-gray-800/30' 
+                      : 'bg-white/30 border-gray-200/50 hover:bg-white/50'
                   }`}
-                  style={{ transitionDelay: `${index * 100}ms` }}
                 >
-                  <div className="flex items-center mb-6">
-                    <span className="text-2xl mr-4 transition-transform duration-300 group-hover:scale-110">
-                      {skillGroup.icon}
-                    </span>
-                    <h3 className={`text-xl font-semibold ${textClass}`}>
-                      {skillGroup.category}
-                    </h3>
-                  </div>
-                  
-                  <div className="space-y-3">
-                    {skillGroup.items.map((skill, skillIndex) => (
-                      <div 
-                        key={skillIndex} 
-                        className={`flex items-center text-sm transition-all duration-300 hover:translate-x-2 ${secondaryTextClass} hover:${textClass.replace('text-', 'hover:text-')}`}
-                        style={{ transitionDelay: `${skillIndex * 50}ms` }}
-                      >
-                        <span className="w-2 h-2 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 mr-3"></span>
-                        {skill}
-                      </div>
-                    ))}
+                  <div className="text-center space-y-6">
+                    <div className="text-4xl mb-4">{skill.icon}</div>
+                    <h3 className={`text-xl font-semibold ${textClass}`}>{skill.category}</h3>
+                    
+                    <div className="flex flex-wrap gap-2 justify-center">
+                      {skill.items.map((item, itemIndex) => (
+                        <span
+                          key={itemIndex}
+                          className={`px-3 py-1.5 text-sm rounded-full backdrop-blur-md transition-all duration-300 hover:scale-105 ${
+                            isDarkMode 
+                              ? 'bg-gray-700/50 text-gray-300 hover:bg-gray-600/50' 
+                              : 'bg-gray-100/70 text-gray-700 hover:bg-gray-200/70'
+                          }`}
+                        >
+                          {item}
+                        </span>
+                      ))}
+                    </div>
                   </div>
                 </div>
               ))}
@@ -521,45 +517,42 @@ const TanishqPortfolio = () => {
 
       {/* Projects Section */}
       {activeSection === 'projects' && (
-        <section className="min-h-screen flex items-center justify-center px-8 pt-24 pb-16 relative z-10">
+        <section className="min-h-screen flex items-center justify-center px-8 pt-24 relative z-10">
           <div className="max-w-7xl w-full">
             <div className="text-center mb-16">
               <h2 className={`text-5xl md:text-6xl font-light mb-6 ${textClass}`}>
                 Featured Projects
               </h2>
-              <div className="w-20 h-1 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full mx-auto"></div>
+              <div className={`w-20 h-1 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full mx-auto`}></div>
             </div>
-            
-            <div className="grid lg:grid-cols-2 gap-8">
+
+            <div className="grid md:grid-cols-2 gap-8">
               {projects.map((project, index) => (
-                <div 
-                  key={index} 
-                  className={`group p-8 rounded-2xl backdrop-blur-xl border transition-all duration-500 hover:scale-[1.02] hover:-translate-y-2 relative overflow-hidden ${
+                <div
+                  key={index}
+                  className={`group p-8 rounded-2xl backdrop-blur-xl border transition-all duration-500 hover:scale-105 hover:-translate-y-2 bg-gradient-to-br ${project.gradient} hover:${project.hoverGradient} ${
                     isDarkMode 
-                      ? 'bg-gray-800/20 border-gray-700/50 hover:bg-gray-800/30' 
-                      : 'bg-white/30 border-gray-200/50 hover:bg-white/50'
+                      ? 'border-gray-700/50 hover:border-gray-600/50' 
+                      : 'border-gray-200/50 hover:border-gray-300/50'
                   }`}
-                  style={{ transitionDelay: `${index * 100}ms` }}
                 >
-                  <div className={`absolute inset-0 bg-gradient-to-br ${project.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500`}></div>
-                  
-                  <div className="relative z-10">
-                    <h3 className={`text-2xl font-semibold mb-4 ${textClass}`}>
+                  <div className="space-y-6">
+                    <h3 className={`text-2xl font-semibold ${textClass} group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-blue-600 group-hover:to-purple-600 group-hover:bg-clip-text transition-all duration-300`}>
                       {project.title}
                     </h3>
                     
-                    <p className={`leading-relaxed mb-6 ${secondaryTextClass}`}>
+                    <p className={`text-base leading-relaxed ${secondaryTextClass}`}>
                       {project.description}
                     </p>
                     
-                    <div className="flex flex-wrap gap-2 mb-8">
+                    <div className="flex flex-wrap gap-2">
                       {project.tech.map((tech, techIndex) => (
-                        <span 
-                          key={techIndex} 
-                          className={`px-3 py-1 text-xs font-medium rounded-full transition-all duration-300 hover:scale-105 backdrop-blur-md ${
+                        <span
+                          key={techIndex}
+                          className={`px-3 py-1.5 text-sm rounded-full backdrop-blur-md transition-all duration-300 hover:scale-105 ${
                             isDarkMode 
-                              ? 'bg-gray-700/50 text-gray-300 border border-gray-600/50' 
-                              : 'bg-gray-100/50 text-gray-700 border border-gray-200/50'
+                              ? 'bg-gray-800/50 text-gray-300 hover:bg-gray-700/50' 
+                              : 'bg-white/70 text-gray-700 hover:bg-white/90'
                           }`}
                         >
                           {tech}
@@ -567,16 +560,21 @@ const TanishqPortfolio = () => {
                       ))}
                     </div>
                     
-                    <a
-                      href={project.github}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className={`inline-flex items-center gap-2 font-medium transition-all duration-300 hover:gap-3 ${textClass}`}
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      <span>View Project</span>
-                      <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>
-                    </a>
+                    <div className="pt-4">
+                      <a
+                        href={project.github}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={`inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 transition-all duration-300 hover:scale-105 backdrop-blur-md ${
+                          isDarkMode 
+                            ? 'border-gray-600 hover:border-gray-400 text-gray-300 hover:text-white hover:bg-white/5' 
+                            : 'border-gray-300 hover:border-gray-600 text-gray-700 hover:text-gray-900 hover:bg-gray-900/5'
+                        }`}
+                      >
+                        <span>View Project</span>
+                        <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>
+                      </a>
+                    </div>
                   </div>
                 </div>
               ))}
@@ -588,60 +586,175 @@ const TanishqPortfolio = () => {
       {/* Contact Section */}
       {activeSection === 'contact' && (
         <section className="min-h-screen flex items-center justify-center px-8 pt-24 relative z-10">
-          <div className="max-w-4xl w-full text-center">
-            <div className="mb-16">
+          <div className="max-w-5xl w-full">
+            <div className="text-center mb-16">
               <h2 className={`text-5xl md:text-6xl font-light mb-6 ${textClass}`}>
                 Let's Connect
               </h2>
-              <div className="w-20 h-1 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full mx-auto mb-8"></div>
-              <p className={`text-xl ${secondaryTextClass} max-w-2xl mx-auto`}>
-                I'm always interested in discussing new opportunities, innovative projects, 
-                or just having a conversation about technology.
+              <div className={`w-20 h-1 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full mx-auto mb-8`}></div>
+              <p className={`text-xl leading-relaxed max-w-3xl mx-auto ${secondaryTextClass}`}>
+                I'm always interested in new opportunities, collaborations, and interesting conversations. 
+                Feel free to reach out if you'd like to connect!
               </p>
             </div>
-            
-            <div className="space-y-12">
-              <a
-                href="mailto:tanishqb41@gmail.com"
-                className={`block text-3xl md:text-4xl font-light transition-all duration-300 hover:scale-105 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent hover:from-purple-600 hover:to-pink-600`}
-              >
-                tanishqb41@gmail.com
-              </a>
-              
-              <div className="flex justify-center space-x-12">
-                {[
-                  { name: 'GitHub', url: 'https://github.com/Bittb', icon: '🐙' },
-                  { name: 'LinkedIn', url: 'https://www.linkedin.com/in/tanishq-bhardwaj-51b061250/', icon: '💼' },
-                  { name: 'Resume', url: 'Tanishq_Bhardwaj_Resume.pdf', icon: '📄' }
-                ].map((link, index) => (
-                  <a
-                    key={index}
-                    href={link.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={`group flex flex-col items-center space-y-2 p-4 rounded-xl transition-all duration-300 hover:scale-110 hover:-translate-y-1 backdrop-blur-md ${
-                      isDarkMode 
-                        ? 'text-gray-400 hover:text-white hover:bg-gray-800/20' 
-                        : 'text-gray-600 hover:text-gray-900 hover:bg-white/20'
-                    }`}
-                    style={{ transitionDelay: `${index * 100}ms` }}
+
+            <div className="grid md:grid-cols-2 gap-12 items-center">
+              {/* Contact Information */}
+              <div className="space-y-8">
+                <div className={`p-6 rounded-2xl backdrop-blur-xl border transition-all duration-300 hover:scale-105 ${
+                  isDarkMode 
+                    ? 'bg-gray-800/20 border-gray-700/50' 
+                    : 'bg-white/30 border-gray-200/50'
+                }`}>
+                  <div className="flex items-center space-x-4">
+                    <div className="text-2xl">📧</div>
+                    <div>
+                      <p className={`font-medium ${textClass}`}>Email</p>
+                      <a 
+                        href="mailto:tanishqbhardwaj@example.com" 
+                        className={`${secondaryTextClass} hover:text-blue-600 transition-colors duration-300`}
+                      >
+                        tanishqbhardwaj@example.com
+                      </a>
+                    </div>
+                  </div>
+                </div>
+
+                <div className={`p-6 rounded-2xl backdrop-blur-xl border transition-all duration-300 hover:scale-105 ${
+                  isDarkMode 
+                    ? 'bg-gray-800/20 border-gray-700/50' 
+                    : 'bg-white/30 border-gray-200/50'
+                }`}>
+                  <div className="flex items-center space-x-4">
+                    <div className="text-2xl">📍</div>
+                    <div>
+                      <p className={`font-medium ${textClass}`}>Location</p>
+                      <p className={secondaryTextClass}>Delhi, India</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className={`p-6 rounded-2xl backdrop-blur-xl border transition-all duration-300 hover:scale-105 ${
+                  isDarkMode 
+                    ? 'bg-gray-800/20 border-gray-700/50' 
+                    : 'bg-white/30 border-gray-200/50'
+                }`}>
+                  <div className="flex items-center space-x-4">
+                    <div className="text-2xl">💼</div>
+                    <div>
+                      <p className={`font-medium ${textClass}`}>LinkedIn</p>
+                      <a 
+                        href="https://linkedin.com/in/tanishq-bhardwaj" 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className={`${secondaryTextClass} hover:text-blue-600 transition-colors duration-300`}
+                      >
+                        Connect with me
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Contact Form */}
+              <div className={`p-8 rounded-2xl backdrop-blur-xl border ${
+                isDarkMode 
+                  ? 'bg-gray-800/20 border-gray-700/50' 
+                  : 'bg-white/30 border-gray-200/50'
+              }`}>
+                <h3 className={`text-2xl font-semibold mb-6 ${textClass}`}>Send a Message</h3>
+                <form className="space-y-6">
+                  <div>
+                    <input
+                      type="text"
+                      placeholder="Your Name"
+                      className={`w-full px-4 py-3 rounded-lg backdrop-blur-md border transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500/50 ${
+                        isDarkMode 
+                          ? 'bg-gray-800/50 border-gray-700/50 text-gray-100 placeholder-gray-400' 
+                          : 'bg-white/50 border-gray-200/50 text-gray-900 placeholder-gray-500'
+                      }`}
+                    />
+                  </div>
+                  <div>
+                    <input
+                      type="email"
+                      placeholder="Your Email"
+                      className={`w-full px-4 py-3 rounded-lg backdrop-blur-md border transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500/50 ${
+                        isDarkMode 
+                          ? 'bg-gray-800/50 border-gray-700/50 text-gray-100 placeholder-gray-400' 
+                          : 'bg-white/50 border-gray-200/50 text-gray-900 placeholder-gray-500'
+                      }`}
+                    />
+                  </div>
+                  <div>
+                    <textarea
+                      rows={4}
+                      placeholder="Your Message"
+                      className={`w-full px-4 py-3 rounded-lg backdrop-blur-md border transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500/50 resize-none ${
+                        isDarkMode 
+                          ? 'bg-gray-800/50 border-gray-700/50 text-gray-100 placeholder-gray-400' 
+                          : 'bg-white/50 border-gray-200/50 text-gray-900 placeholder-gray-500'
+                      }`}
+                    />
+                  </div>
+                  <button
+                    type="submit"
+                    className="w-full px-6 py-3 rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 text-white font-medium transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-purple-500/25"
                   >
-                    <span className="text-2xl transition-transform duration-300 group-hover:scale-125">
-                      {link.icon}
-                    </span>
-                    <span className="font-medium">{link.name}</span>
-                  </a>
-                ))}
+                    Send Message
+                  </button>
+                </form>
+              </div>
+            </div>
+
+            {/* Social Links */}
+            <div className="mt-16 text-center">
+              <div className="flex justify-center space-x-6">
+                <a
+                  href="https://github.com/Bittb"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`p-4 rounded-full backdrop-blur-xl border transition-all duration-300 hover:scale-110 ${
+                    isDarkMode 
+                      ? 'bg-gray-800/20 border-gray-700/50 hover:bg-gray-800/30' 
+                      : 'bg-white/30 border-gray-200/50 hover:bg-white/50'
+                  }`}
+                >
+                  <div className="w-6 h-6 flex items-center justify-center text-xl">
+                    🐙
+                  </div>
+                </a>
+                <a
+                  href="https://linkedin.com/in/tanishq-bhardwaj"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`p-4 rounded-full backdrop-blur-xl border transition-all duration-300 hover:scale-110 ${
+                    isDarkMode 
+                      ? 'bg-gray-800/20 border-gray-700/50 hover:bg-gray-800/30' 
+                      : 'bg-white/30 border-gray-200/50 hover:bg-white/50'
+                  }`}
+                >
+                  <div className="w-6 h-6 flex items-center justify-center text-xl">
+                    💼
+                  </div>
+                </a>
+                <a
+                  href="mailto:tanishqbhardwaj@example.com"
+                  className={`p-4 rounded-full backdrop-blur-xl border transition-all duration-300 hover:scale-110 ${
+                    isDarkMode 
+                      ? 'bg-gray-800/20 border-gray-700/50 hover:bg-gray-800/30' 
+                      : 'bg-white/30 border-gray-200/50 hover:bg-white/50'
+                  }`}
+                >
+                  <div className="w-6 h-6 flex items-center justify-center text-xl">
+                    📧
+                  </div>
+                </a>
               </div>
             </div>
           </div>
         </section>
       )}
-
-      {/* Footer */}
-      <footer className={`fixed bottom-8 left-8 text-sm z-40 ${mutedTextClass}`}>
-        <p>© 2025 Tanishq Bhardwaj. Crafted with passion.</p>
-      </footer>
     </div>
   );
 };
