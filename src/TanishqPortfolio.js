@@ -419,7 +419,7 @@ const TanishqPortfolio = () => {
                 <div className={`space-y-6 text-lg leading-relaxed ${secondaryTextClass}`}>
                   <p>
                     I'm a passionate developer from Delhi, currently pursuing B.Tech in Information Technology 
-                    at Jaypee University. My journey spans across web development, artificial intelligence, 
+                    at Jaypee University of Information Technology. My journey spans across web development, software development, artificial intelligence, 
                     and cybersecurity domains.
                   </p>
                   <p>
@@ -458,7 +458,7 @@ const TanishqPortfolio = () => {
                   <div className="text-8xl mb-6">👨‍💻</div>
                   <div className={`space-y-2 ${mutedTextClass}`}>
                     <p className="font-medium">B.Tech Information Technology</p>
-                    <p>Jaypee University</p>
+                    <p>Jaypee University of Information Technology</p>
                     <p>Expected 2026</p>
                   </div>
                 </div>
