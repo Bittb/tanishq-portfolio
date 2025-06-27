@@ -739,7 +739,7 @@ const TanishqPortfolio = () => {
                   </div>
                 </a>
                 <a
-                  href="mailto:tanishqbhardwaj@example.com"
+                  href="mailto:tanishqb41@gmail.com"
                   className={`p-4 rounded-full backdrop-blur-xl border transition-all duration-300 hover:scale-110 ${
                     isDarkMode 
                       ? 'bg-gray-800/20 border-gray-700/50 hover:bg-gray-800/30' 
